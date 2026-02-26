@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stefano Cerri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    body {
+      font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+      color: #333;
+      background: #fff;
+      line-height: 1.65;
+      font-size: 16px;
+    }
+    a { color: #2563eb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ── Layout ── */
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      width: 280px;
+      min-width: 280px;
+      height: 100vh;
+      background: #f8f9fa;
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px 24px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    .sidebar-profile {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border: 3px solid #e5e7eb;
+    }
+    .sidebar-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+    .sidebar-title, .sidebar-affiliation {
+      font-size: 0.9rem;
+      color: #555;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .sidebar-affiliation { margin-bottom: 2px; }
+    .sidebar-email {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 6px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* Nav links */
+    .sidebar-nav {
+      list-style: none;
+      width: 100%;
+      margin-bottom: 28px;
+    }
+    .sidebar-nav li { margin-bottom: 2px; }
+    .sidebar-nav a {
+      display: block;
+      padding: 8px 16px;
+      color: #333;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .sidebar-nav a:hover {
+      background: #e8ecf1;
+      color: #111;
+      text-decoration: none;
+    }
+    .sidebar-nav a.active {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    /* Social icons */
+    .sidebar-social {
+      display: flex;
+      gap: 16px;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+    .sidebar-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      color: #555;
+      transition: background 0.15s, color 0.15s;
+    }
+    .sidebar-social a:hover {
+      background: #2563eb;
+      color: #fff;
+      text-decoration: none;
+    }
+    .sidebar-social svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* ── Main Content ── */
+    .main {
+      flex: 1;
+      padding: 48px 56px 80px;
+      max-width: 900px;
+    }
+
+    /* Center layout when viewport is very wide */
+    .wrapper {
+      display: flex;
+      min-height: 100vh;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    /* ── Section headings ── */
+    .section { margin-bottom: 56px; }
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    /* ── About ── */
+    .about-text { font-size: 1rem; color: #444; margin-bottom: 20px; }
+    .about-text a { color: #2563eb; }
+    .experience-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 12px;
+    }
+    .experience-list { list-style: none; }
+    .experience-list li {
+      padding: 8px 0;
+      font-size: 0.95rem;
+      color: #444;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .experience-list li:last-child { border-bottom: none; }
+    .experience-list strong { color: #222; }
+    .exp-icon {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      color: #6b7280;
+    }
+
+    /* ── Publications ── */
+    .pub-intro { font-size: 0.95rem; color: #555; margin-bottom: 24px; }
+    .pub-card {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .pub-card:last-child { border-bottom: none; }
+    .pub-img {
+      flex-shrink: 0;
+      width: 200px;
+      border-radius: 6px;
+      overflow: hidden;
+      line-height: 0;
+    }
+    .pub-img img { width: 100%; height: auto; display: block; }
+    .pub-info { flex: 1; }
+    .pub-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+    .pub-authors {
+      font-size: 0.9rem;
+      color: #555;
+      font-style: italic;
+      margin-bottom: 4px;
+    }
+    .pub-venue {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .pub-links a {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 8px;
+      color: #2563eb;
+    }
+    .pub-links a:hover { text-decoration: underline; }
+    .pub-award {
+      display: inline-block;
+      margin-top: 8px;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    /* ── Software ── */
+    .sw-card {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .sw-card:last-child { border-bottom: none; }
+    .sw-img {
+      flex-shrink: 0;
+      width: 200px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f4f4f5;
+    }
+    .sw-img img { width: 100%; height: auto; }
+    .sw-info { flex: 1; }
+    .sw-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 8px;
+    }
+    .sw-links a {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 8px;
+      color: #2563eb;
+    }
+
+    /* ── Back to Top ── */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 40px;
+      height: 40px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 200;
+    }
+    .back-to-top.visible { opacity: 1; }
+    .back-to-top:hover { background: #1d4ed8; }
+
+    /* ── Mobile hamburger ── */
+    .mobile-header {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #e5e7eb;
+      z-index: 200;
+      align-items: center;
+      padding: 0 16px;
+    }
+    .hamburger {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #333;
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-header-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #111;
+      margin-left: 12px;
+    }
+
+    /* ── Sidebar overlay for mobile ── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 99;
+    }
+    .sidebar-overlay.active { display: block; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .pub-card, .sw-card { flex-direction: column; }
+      .pub-img, .sw-img { width: 100%; max-width: 320px; }
+      .main { padding: 48px 32px 80px; }
+    }
+    @media (max-width: 768px) {
+      .mobile-header { display: flex; }
+      .sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        height: 100vh;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        width: 280px;
+        min-width: 280px;
+        padding-top: 24px;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .main {
+        padding: 72px 20px 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Header -->
+<div class="mobile-header">
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <span class="mobile-header-name">Stefano Cerri</span>
+</div>
+<div class="sidebar-overlay" id="overlay"></div>
+
+<div class="wrapper">
+
+  <!-- ═══ Sidebar ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <img src="images/profile.png" alt="Stefano Cerri" class="sidebar-profile">
+    <div class="sidebar-name">Stefano Cerri</div>
+    <div class="sidebar-title">Postdoctoral Researcher</div>
+    <div class="sidebar-affiliation">Pioneer Centre for AI</div>
+    <div class="sidebar-email">stce at di dot ku dot dk</div>
+
+    <ul class="sidebar-nav">
+      <li><a href="#about">About</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#software">Software</a></li>
+    </ul>
+
+    <div class="sidebar-social">
+      <!-- GitHub -->
+      <a href="https://github.com/ste93ste" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      </a>
+      <!-- LinkedIn -->
+      <a href="https://www.linkedin.com/in/stefano-cerri-654795199/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <!-- Google Scholar -->
+      <a href="https://scholar.google.com/citations?hl=en&user=l2jnkFEAAAAJ" target="_blank" rel="noopener" aria-label="Google Scholar">
+        <svg viewBox="0 0 24 24"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 100 14 7 7 0 000-14z"/></svg>
+      </a>
+      <!-- Twitter / X -->
+      <a href="https://twitter.com/Stefano__Cerri" target="_blank" rel="noopener" aria-label="Twitter">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="main">
+
+    <!-- About -->
+    <section class="section" id="about">
+      <h2 class="section-title">About</h2>
+      <p class="about-text">
+        I'm a postdoctoral researcher at the <a href="https://www.aicentre.dk/" target="_blank">Pioneer Centre for AI</a> and at the <a href="https://research.regionh.dk/en/organisations/copenhagen-research-centre-for-biological-and-precision-psychiatr/" target="_blank">Copenhagen Research Centre for Biological and Precision Psychiatry</a>, developing automatic models for analyzing brain MRI data. I'm the recipient of a <a href="https://lundbeckfonden.com/beyond-point-estimates-exploring-cortical-thickness-uncertainty-from-clinical-psychiatric-mri-scans" target="_blank">Lundbeck Foundation Postdoc Fellowship</a> and part of the <a href="https://lundbeckfonden.com/lfin" target="_blank">Lundbeck Foundation Investigator Network (LFIN)</a>. I'm also one of the lead organizers of the <a href="https://fomo25.github.io/" target="_blank">FOMO25 Challenge</a> at MICCAI 2025, a challenge on self-supervised learning for medical imaging. Previously, I was a research fellow at the <a href="https://www.martinos.org/" target="_blank">Athinoula A. Martinos Center for Biomedical Imaging</a>. I obtained my PhD at the <a href="http://www.dtu.dk/english" target="_blank">Technical University of Denmark (DTU)</a>, supervised by <a href="https://users.aalto.fi/~vanlek2/" target="_blank">Koen Van Leemput</a>. I was also part of the 15 PhD students of the <a href="https://trabit.eu/" target="_blank">Translational Brain Imaging Train Network (TRABIT)</a>.
+      </p>
+      <h3 class="experience-title">Past Experiences</h3>
+      <ul class="experience-list">
+        <li>
+          <svg class="exp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+          <span><strong>Research Fellow</strong>, Athinoula A. Martinos Center for Biomedical Imaging, 2021–2023</span>
+        </li>
+        <li>
+          <svg class="exp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+          <span><strong>PhD Degree</strong>, Medical Image Analysis, Technical University of Denmark, 2018–2021</span>
+        </li>
+        <li>
+          <svg class="exp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <span><strong>Machine Learning Intern</strong>, Horus Technology, 2017</span>
+        </li>
+        <li>
+          <svg class="exp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+          <span><strong>Master Degree</strong>, Computer Science, Politecnico di Milano, 2015–2017</span>
+        </li>
+        <li>
+          <svg class="exp-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+          <span><strong>Bachelor Degree</strong>, Computer Science, Politecnico di Milano, 2012–2015</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Publications -->
+    <section class="section" id="publications">
+      <h2 class="section-title">Publications</h2>
+      <p class="pub-intro">Selected publications, for a full list see <a href="https://scholar.google.com/citations?hl=en&user=l2jnkFEAAAAJ" target="_blank">Google Scholar</a>.</p>
+
+      <div class="pub-card">
+        <div class="pub-img"><img src="images/FOMO300K.png" alt="FOMO300K dataset"></div>
+        <div class="pub-info">
+          <div class="pub-title">A large-scale heterogeneous 3D magnetic resonance brain imaging dataset for self-supervised learning</div>
+          <div class="pub-authors">Stefano Cerri*, Asbjørn Munk*, Jakob Ambsdorf, Julia Machnio, Sebastian Nørgaard Llambias, Vardan Nersesjan, Christian Hedeager Krag, Peirong Liu, Pablo Rocamora García, Mostafa Mehdipour Ghazi, Mikael Boesen, Michael Eriksen Benros, Juan Eugenio Iglesias, Mads Nielsen</div>
+          <div class="pub-venue">arXiv preprint, 2025</div>
+          <div class="pub-links">
+            <a href="https://arxiv.org/abs/2506.14432" target="_blank">Paper</a>
+            <a href="https://huggingface.co/datasets/FOMO-MRI/FOMO300K" target="_blank">Dataset</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-img"><img src="images/CrossMentalDisorders.png" alt="Cross-disorder brain structures"></div>
+        <div class="pub-info">
+          <div class="pub-title">Cross-disorder comparison of Brain Structures among 4,842 Individuals with Mental Disorders and Controls utilizing Danish population-based Clinical MRI Scans</div>
+          <div class="pub-authors">Stefano Cerri, Vardan Nersesjan, Kiril Vadimovic Klein, Enric Cristòbal Cóppulo, Sebastian Nørgaard Llambias, Mostafa Mehdipour Ghazi, Mads Nielsen, Michael Eriksen Benros</div>
+          <div class="pub-venue">medRxiv preprint, 2025</div>
+          <div class="pub-links">
+            <a href="https://www.medrxiv.org/content/10.1101/2025.03.19.25324239v3" target="_blank">Paper</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-img"><img src="images/longMS.png" alt="Longitudinal segmentation example"></div>
+        <div class="pub-info">
+          <div class="pub-title">An Open-Source Tool for Longitudinal Whole-Brain and White Matter Lesion Segmentation</div>
+          <div class="pub-authors">Stefano Cerri, Douglas N. Greve, Andrew Hoopes, Henrik Lundell, Hartwig R. Siebner, Mark Mühlau, Koen Van Leemput</div>
+          <div class="pub-venue">NeuroImage Clinical, Vol. 38, 2023, 103354</div>
+          <div class="pub-links">
+            <a href="https://www.sciencedirect.com/science/article/pii/S2213158223000438?via%3Dihub" target="_blank">Paper</a>
+            <a href="http://freesurfer.net/" target="_blank">Code</a>
+            <a href="http://freesurfer.net/fswiki/Samseg" target="_blank">Wiki</a>
+          </div>
+          <div class="pub-award">🏆 NICL 2024 Best Paper Award!</div>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-img"><img src="images/tumor.png" alt="Tumor survival prediction"></div>
+        <div class="pub-info">
+          <div class="pub-title">Predicting survival of glioblastoma from automatic whole-brain and tumor segmentation of MR images</div>
+          <div class="pub-authors">Sveinn Pálsson, Stefano Cerri, Hans Skovgaard Poulsen, Thomas Urup, Ian Law, Koen Van Leemput</div>
+          <div class="pub-venue">Scientific Reports, Vol. 12, 2022, 19744</div>
+          <div class="pub-links">
+            <a href="https://www.nature.com/articles/s41598-022-19223-3" target="_blank">Paper</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-img"><img src="images/samseg_lesion.png" alt="SAMSEG lesion segmentation"></div>
+        <div class="pub-info">
+          <div class="pub-title">A Contrast-Adaptive Method for Simultaneous Whole-Brain and Lesion Segmentation in Multiple Sclerosis</div>
+          <div class="pub-authors">Stefano Cerri, Oula Puonti, Dominik S. Meier, Jens Wuerfel, Mark Mühlau, Hartwig R. Siebner, Koen Van Leemput</div>
+          <div class="pub-venue">NeuroImage, Vol. 225, 2021, 117471</div>
+          <div class="pub-links">
+            <a href="https://www.sciencedirect.com/science/article/pii/S1053811920309563" target="_blank">Paper</a>
+            <a href="http://freesurfer.net/" target="_blank">Code</a>
+            <a href="http://freesurfer.net/fswiki/Samseg" target="_blank">Wiki</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-img"><img src="images/samseg_long.png" alt="Longitudinal lesion model"></div>
+        <div class="pub-info">
+          <div class="pub-title">A Longitudinal Method for Simultaneous Whole-Brain and Lesion Segmentation in Multiple Sclerosis</div>
+          <div class="pub-authors">Stefano Cerri, Andrew Hoopes, Douglas N. Greve, Mark Mühlau, Koen Van Leemput</div>
+          <div class="pub-venue">3rd MLCN workshop, MICCAI 2020</div>
+          <div class="pub-links">
+            <a href="https://arxiv.org/abs/2008.05117" target="_blank">Paper</a>
+            <a href="https://github.com/freesurfer/freesurfer" target="_blank">Code</a>
+            <a href="http://freesurfer.net/fswiki/Samseg" target="_blank">Wiki</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card">
+        <div class="pub-img"><img src="images/vae.png" alt="VAE generated samples"></div>
+        <div class="pub-info">
+          <div class="pub-title">Semi-supervised Variational Autoencoder for Survival Prediction</div>
+          <div class="pub-authors">Sveinn Pálsson*, Stefano Cerri*, Andrea Dittadi*, Koen Van Leemput</div>
+          <div class="pub-venue">BrainLes 2019 workshop, BRATS challenge, MICCAI 2019</div>
+          <div class="pub-links">
+            <a href="https://arxiv.org/abs/1910.04488" target="_blank">Paper</a>
+            <a href="https://github.com/sveinnpalsson/semivaebrats" target="_blank">Code</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Software -->
+    <section class="section" id="software">
+      <h2 class="section-title">Software</h2>
+      <p class="pub-intro">I'm actively maintaining the segmentation code of SAMSEG, included in <a href="http://freesurfer.net/" target="_blank">FreeSurfer</a>.</p>
+
+      <div class="sw-card">
+        <div class="sw-img"><img src="images/3D.png" alt="3D brain segmentation"></div>
+        <div class="sw-info">
+          <div class="sw-title">Contrast-Adaptive Whole-Brain and Lesion Segmentation Tool</div>
+          <div class="sw-links">
+            <a href="https://arxiv.org/abs/2005.05135" target="_blank">Paper</a>
+            <a href="https://github.com/freesurfer/samseg" target="_blank">Code</a>
+            <a href="http://freesurfer.net/fswiki/Samseg" target="_blank">Wiki</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sw-card">
+        <div class="sw-img"><img src="images/new_model.png" alt="VAE CNN architecture"></div>
+        <div class="sw-info">
+          <div class="sw-title">Semi-supervised Variational Autoencoder CNN architecture for modeling of 3D brain images and classification</div>
+          <div class="sw-links">
+            <a href="https://arxiv.org/abs/1910.04488" target="_blank">Paper</a>
+            <a href="https://github.com/sveinnpalsson/semivaebrats" target="_blank">Code</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sw-card">
+        <div class="sw-img"><img src="images/seg_example.png" alt="Longitudinal segmentation"></div>
+        <div class="sw-info">
+          <div class="sw-title">Longitudinal Contrast-Adaptive Whole-Brain and Lesion Segmentation Tool</div>
+          <div class="sw-links">
+            <a href="https://www.sciencedirect.com/science/article/pii/S2213158223000438?via%3Dihub" target="_blank">Paper1</a>
+            <a href="https://arxiv.org/abs/2008.05117" target="_blank">Paper2</a>
+            <a href="https://github.com/freesurfer/samseg" target="_blank">Code</a>
+            <a href="http://freesurfer.net/fswiki/Samseg" target="_blank">Wiki</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Back to Top -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+<script>
+  // ── Mobile menu toggle ──
+  const hamburger = document.getElementById('hamburger');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  function toggleMenu() {
+    hamburger.classList.toggle('open');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+  }
+  hamburger.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);
+
+  // Close menu on nav click (mobile)
+  sidebar.querySelectorAll('.sidebar-nav a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 768) toggleMenu();
+    });
+  });
+
+  // ── Active nav highlight on scroll ──
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.sidebar-nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const id = entry.target.getAttribute('id');
+        const active = document.querySelector(`.sidebar-nav a[href="#${id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+
+  // ── Back to top button ──
+  const btn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  });
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+</script>
+
+</body>
+</html>
